@@ -20,7 +20,7 @@ function init() {
     0.1,
     20,
   );
-  camera.position.set(0, 0, -10);
+  camera.position.set(-10, 20, 40);
 
   scene = new THREE.Scene();
 
@@ -28,9 +28,18 @@ function init() {
 
   new GLTFLoader().setPath('models/gltf/').load('scene.gltf', function (gltf) {
     gltf.scene.scale.setScalar(0.1);
+    gltf.scene.position.set(0, 10, 0);
 
     scene.add(gltf.scene);
   });
+
+  new GLTFLoader()
+    .setPath('models/gltf/')
+    .load('landscape.glb', function (gltf) {
+      //gltf.scene.scale.setScalar(1);
+
+      scene.add(gltf.scene);
+    });
 
   renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -49,7 +58,7 @@ function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.minDistance = 1;
-  controls.maxDistance = 15;
+  controls.maxDistance = 50;
   controls.target.set(0, 0.35, 0);
   controls.update();
 
@@ -63,7 +72,9 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-//
+camera.near = 0.01;
+camera.far = 1000;
+camera.updateProjectionMatrix();
 
 function animate() {
   controls.update(); // required if damping enabled
